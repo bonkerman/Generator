@@ -1,0 +1,35 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+entity Generator is
+	Port ( 
+			CLOCK_50 	: in STD_LOGIC;
+--//////////// LED //////////
+			LED			: out STD_LOGIC_VECTOR(7 DOWNTO 0);
+--//////////// SW //////////
+			KEY				: in STD_LOGIC_VECTOR(1 DOWNTO 0);
+			SW           : in STD_LOGIC_VECTOR(3 DOWNTO 0);
+			GPIO_2 : inout STD_LOGIC_VECTOR(11 DOWNTO 0)
+											);
+end entity;
+
+architecture main of Generator is
+	constant base_freq : real := 50.0e6;
+	variable cnt: integer 0 to base_freq  :=0;
+	alias clk is CLOCK_50;
+begin
+	process(clk)
+	begin
+		if(rising_edge(clk)) then
+			cnt := cnt + 1;
+			if(cnt=base_freq) then
+				cnt := 0;
+				LED <= (others => '0');
+				elsif (cnt=25000000) then
+				LED <= (others => '1');
+			end if;
+		end if;
+	end process;
+end main;
